@@ -53,9 +53,9 @@ export const adminService = {
 
     return {
       totalUsers, totalJobs, totalApplications, totalCompanies, activeJobs, recentUsers, recentApplications,
-      roleDistribution: roleDistribution.map(r => ({ role: r.role, count: r._count })),
-      appStatusDist: appStatusDist.map(a => ({ status: a.status, count: a._count })),
-      jobTypeDist: jobTypeDist.map(j => ({ type: j.type, count: j._count })),
+      roleDistribution: roleDistribution.map((r: any) => ({ role: r.role, count: r._count })),
+      appStatusDist: appStatusDist.map((a: any) => ({ status: a.status, count: a._count })),
+      jobTypeDist: jobTypeDist.map((j: any) => ({ type: j.type, count: j._count })),
       monthlyChartData,
     };
   },
@@ -112,7 +112,7 @@ export const adminService = {
       const apps = await prisma.application.count({ where: { job: { companyId: company.id }, createdAt: { gte: s, lte: e } } });
       monthlyData.push({ month: months[d.getMonth()], applications: apps });
     }
-    return { totalJobs, activeJobs, totalApplications, recentApps, appStatusDist: appStatusDist.map(a => ({ status: a.status, count: a._count })), monthlyData };
+    return { totalJobs, activeJobs, totalApplications, recentApps, appStatusDist: appStatusDist.map((a: any) => ({ status: a.status, count: a._count })), monthlyData };
   },
 
   async getSeekerStats(userId: string) {
@@ -123,6 +123,6 @@ export const adminService = {
       prisma.application.count({ where: { userId, status: 'INTERVIEW' } }),
     ]);
     const appStatusDist = await prisma.application.groupBy({ by: ['status'], where: { userId }, _count: true });
-    return { totalApplications, savedJobs, pendingApps, interviewApps, appStatusDist: appStatusDist.map(a => ({ status: a.status, count: a._count })) };
+    return { totalApplications, savedJobs, pendingApps, interviewApps, appStatusDist: appStatusDist.map((a: any) => ({ status: a.status, count: a._count })) };
   },
 };

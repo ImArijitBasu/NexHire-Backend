@@ -75,7 +75,7 @@ Return JSON:
 Candidate: Skills: ${user?.skills?.join(', ') || preferences?.skills || 'Not specified'}, Bio: ${user?.bio || 'N/A'}, Location: ${user?.location || 'Flexible'}, Preferences: ${preferences?.description || 'Open'}
 
 Jobs:
-${JSON.stringify(jobs.map(j => ({ id: j.id, title: j.title, company: j.company.name, skills: j.skills, type: j.type, level: j.experienceLevel, salary: j.salaryMin && j.salaryMax ? `$${j.salaryMin}-$${j.salaryMax}` : 'N/A', location: j.location, remote: j.isRemote })), null, 2)}
+${JSON.stringify(jobs.map((j: any) => ({ id: j.id, title: j.title, company: j.company.name, skills: j.skills, type: j.type, level: j.experienceLevel, salary: j.salaryMin && j.salaryMax ? `$${j.salaryMin}-$${j.salaryMax}` : 'N/A', location: j.location, remote: j.isRemote })), null, 2)}
 
 Return top 10 matches as JSON:
 {
@@ -88,7 +88,7 @@ Return top 10 matches as JSON:
     const matchResult = JSON.parse(result.response.text());
 
     const enriched = matchResult.matches?.map((m: any) => {
-      const job = jobs.find(j => j.id === m.jobId);
+      const job = jobs.find((j: any) => j.id === m.jobId);
       return { ...m, job };
     }).filter((m: any) => m.job) || [];
 
@@ -105,7 +105,7 @@ Return top 10 matches as JSON:
 
     const systemPrompt = `You are NexHire's AI Interview Coach — friendly, encouraging, expert career mentor.${data.jobTitle ? ` Candidate is preparing for ${data.jobTitle}${data.company ? ` at ${data.company}` : ''}.` : ''} Help with mock interviews, behavioral questions, STAR method, salary negotiation. Keep responses concise and actionable.`;
 
-    const chatHistory = history.map(h => ({ role: h.role as 'user' | 'model', parts: [{ text: h.content }] }));
+    const chatHistory = history.map((h: any) => ({ role: h.role as 'user' | 'model', parts: [{ text: h.content }] }));
     const chat = geminiChatModel.startChat({
       history: [
         { role: 'user', parts: [{ text: systemPrompt }] },

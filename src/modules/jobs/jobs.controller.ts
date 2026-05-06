@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import { ZodError } from 'zod';
 import { AuthRequest } from '../../middleware/auth';
 import { jobsService } from './jobs.service';
 import { createJobSchema, updateJobSchema, jobQuerySchema } from './jobs.validation';
-import { z } from 'zod';
+
+type Q = Record<string, string>;
 
 export const jobsController = {
   async getAll(req: Request, res: Response) {
@@ -26,7 +28,7 @@ export const jobsController = {
 
   async getBySlug(req: Request, res: Response) {
     try {
-      const result = await jobsService.getBySlug(req.params.slug);
+      const result = await jobsService.getBySlug(req.params.slug as string);
       res.json({ success: true, ...result });
     } catch (error: any) {
       res.status(error.status || 500).json({ success: false, error: error.message || 'Failed to fetch job' });
@@ -39,7 +41,7 @@ export const jobsController = {
       const job = await jobsService.create(data, req.user!.id);
       res.status(201).json({ success: true, job });
     } catch (error: any) {
-      if (error instanceof z.ZodError) { res.status(400).json({ success: false, error: error.errors[0].message }); return; }
+      if (error instanceof ZodError) { res.status(400).json({ success: false, error: error.issues[0].message }); return; }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Failed to create job' });
     }
   },
@@ -47,17 +49,17 @@ export const jobsController = {
   async update(req: AuthRequest, res: Response) {
     try {
       const data = updateJobSchema.parse(req.body);
-      const job = await jobsService.update(req.params.id, data, req.user!.id, req.user!.role);
+      const job = await jobsService.update(req.params.id as string, data, req.user!.id, req.user!.role);
       res.json({ success: true, job });
     } catch (error: any) {
-      if (error instanceof z.ZodError) { res.status(400).json({ success: false, error: error.errors[0].message }); return; }
+      if (error instanceof ZodError) { res.status(400).json({ success: false, error: error.issues[0].message }); return; }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Failed to update job' });
     }
   },
 
   async delete(req: AuthRequest, res: Response) {
     try {
-      await jobsService.delete(req.params.id, req.user!.id, req.user!.role);
+      await jobsService.delete(req.params.id as string, req.user!.id, req.user!.role);
       res.json({ success: true, message: 'Job deleted' });
     } catch (error: any) {
       res.status(error.status || 500).json({ success: false, error: error.message || 'Failed to delete job' });
@@ -66,7 +68,7 @@ export const jobsController = {
 
   async toggleSave(req: AuthRequest, res: Response) {
     try {
-      const result = await jobsService.toggleSave(req.params.id, req.user!.id);
+      const result = await jobsService.toggleSave(req.params.id as string, req.user!.id);
       res.json({ success: true, ...result });
     } catch (error: any) {
       res.status(500).json({ success: false, error: 'Failed to save job' });

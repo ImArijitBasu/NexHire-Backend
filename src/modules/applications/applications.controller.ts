@@ -14,7 +14,7 @@ export const applicationsController = {
 
   async getMy(req: AuthRequest, res: Response) {
     try {
-      const result = await applicationsService.getMy(req.user!.id, req.query as any);
+      const result = await applicationsService.getMy(req.user!.id, req.query as Record<string, string>);
       res.json({ success: true, ...result });
     } catch (error: any) {
       res.status(500).json({ success: false, error: 'Failed to fetch applications' });
@@ -23,7 +23,7 @@ export const applicationsController = {
 
   async getForEmployer(req: AuthRequest, res: Response) {
     try {
-      const result = await applicationsService.getForEmployer(req.user!.id, req.query as any);
+      const result = await applicationsService.getForEmployer(req.user!.id, req.query as Record<string, string>);
       res.json({ success: true, ...result });
     } catch (error: any) {
       res.status(500).json({ success: false, error: 'Failed to fetch applications' });
@@ -32,7 +32,7 @@ export const applicationsController = {
 
   async updateStatus(req: AuthRequest, res: Response) {
     try {
-      const application = await applicationsService.updateStatus(req.params.id, req.user!.id, req.user!.role, req.body.status, req.body.notes);
+      const application = await applicationsService.updateStatus(req.params.id as string, req.user!.id, req.user!.role, req.body.status, req.body.notes);
       res.json({ success: true, application });
     } catch (error: any) {
       res.status(error.status || 500).json({ success: false, error: error.message || 'Failed to update' });

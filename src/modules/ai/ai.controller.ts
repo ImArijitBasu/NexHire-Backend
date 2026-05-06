@@ -39,7 +39,7 @@ export const aiController = {
 
   async getHistory(req: AuthRequest, res: Response) {
     try {
-      const result = await aiService.getHistory(req.user!.id, req.query as any);
+      const result = await aiService.getHistory(req.user!.id, req.query as Record<string, string>);
       res.json({ success: true, ...result });
     } catch (error: any) { res.status(500).json({ success: false, error: 'Failed to fetch history' }); }
   },
@@ -53,7 +53,7 @@ export const aiController = {
 
   async getChatMessages(req: AuthRequest, res: Response) {
     try {
-      const messages = await aiService.getChatMessages(req.user!.id, req.params.sessionId);
+      const messages = await aiService.getChatMessages(req.user!.id, req.params.sessionId as string);
       res.json({ success: true, messages });
     } catch (error: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },

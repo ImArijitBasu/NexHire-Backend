@@ -16,7 +16,7 @@ export const generalController = {
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
   async markNotificationRead(req: AuthRequest, res: Response) {
-    try { await generalService.markNotificationRead(req.params.id); res.json({ success: true }); }
+    try { await generalService.markNotificationRead(req.params.id as string); res.json({ success: true }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
   async markAllRead(req: AuthRequest, res: Response) {
@@ -28,7 +28,7 @@ export const generalController = {
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
   async getReviews(req: Request, res: Response) {
-    try { const result = await generalService.getReviews(req.params.companyId); res.json({ success: true, ...result }); }
+    try { const result = await generalService.getReviews(req.params.companyId as string); res.json({ success: true, ...result }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
   async getPublicStats(_req: Request, res: Response) {

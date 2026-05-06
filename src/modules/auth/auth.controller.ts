@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { z } from 'zod';
+import { ZodError } from 'zod';
 import { AuthRequest } from '../../middleware/auth';
 import { authService } from './auth.service';
 import {
@@ -14,8 +14,8 @@ export const authController = {
       const result = await authService.register(data);
       res.status(201).json({ success: true, ...result });
     } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: error.errors[0].message });
+      if (error instanceof ZodError) {
+        res.status(400).json({ success: false, error: error.issues[0].message });
         return;
       }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Registration failed' });
@@ -28,8 +28,8 @@ export const authController = {
       const result = await authService.login(data);
       res.json({ success: true, ...result });
     } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: error.errors[0].message });
+      if (error instanceof ZodError) {
+        res.status(400).json({ success: false, error: error.issues[0].message });
         return;
       }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Login failed' });
@@ -42,8 +42,8 @@ export const authController = {
       const result = await authService.googleAuth(data);
       res.json({ success: true, ...result });
     } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: error.errors[0].message });
+      if (error instanceof ZodError) {
+        res.status(400).json({ success: false, error: error.issues[0].message });
         return;
       }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Google auth failed' });
@@ -65,8 +65,8 @@ export const authController = {
       const user = await authService.updateProfile(req.user!.id, data);
       res.json({ success: true, user });
     } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: error.errors[0].message });
+      if (error instanceof ZodError) {
+        res.status(400).json({ success: false, error: error.issues[0].message });
         return;
       }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Update failed' });
@@ -79,8 +79,8 @@ export const authController = {
       await authService.changePassword(req.user!.id, data.currentPassword, data.newPassword);
       res.json({ success: true, message: 'Password changed successfully' });
     } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: error.errors[0].message });
+      if (error instanceof ZodError) {
+        res.status(400).json({ success: false, error: error.issues[0].message });
         return;
       }
       res.status(error.status || 500).json({ success: false, error: error.message || 'Password change failed' });

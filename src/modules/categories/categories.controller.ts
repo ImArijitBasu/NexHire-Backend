@@ -12,11 +12,11 @@ export const categoriesController = {
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed to create category' }); }
   },
   async update(req: AuthRequest, res: Response) {
-    try { const category = await categoriesService.update(req.params.id, req.body); res.json({ success: true, category }); }
+    try { const category = await categoriesService.update(req.params.id as string, req.body); res.json({ success: true, category }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed to update category' }); }
   },
   async delete(req: AuthRequest, res: Response) {
-    try { await categoriesService.delete(req.params.id); res.json({ success: true, message: 'Category deleted' }); }
+    try { await categoriesService.delete(req.params.id as string); res.json({ success: true, message: 'Category deleted' }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed to delete category' }); }
   },
 };

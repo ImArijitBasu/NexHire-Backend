@@ -16,13 +16,18 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
-  "keywords": ["job-board", "ai", "nextjs", "express"],
+  "keywords": [
+    "job-board",
+    "ai",
+    "nextjs",
+    "express"
+  ],
   "author": "NexHire",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.6.9",
     "compression": "^1.8.1",
@@ -36,10 +41,11 @@
     "multer": "^2.1.1",
     "node-cache": "^5.1.2",
     "winston": "^3.19.0",
-    "zod": "^4.4.3"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.8.1",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
@@ -47,7 +53,7 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.6.0",
     "nodemon": "^3.1.14",
-    "prisma": "^7.8.0",
+    "prisma": "^6.19.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"

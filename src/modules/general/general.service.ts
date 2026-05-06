@@ -35,7 +35,7 @@ export const generalService = {
 
   async getReviews(companyId: string) {
     const reviews = await prisma.review.findMany({ where: { companyId }, orderBy: { createdAt: 'desc' }, include: { user: { select: { name: true, image: true } } } });
-    const avgRating = reviews.length > 0 ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : 0;
+    const avgRating = reviews.length > 0 ? Math.round((reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length) * 10) / 10 : 0;
     return { reviews, avgRating };
   },
 
