@@ -27,6 +27,7 @@ export const updateProfileSchema = z.object({
   website: z.string().url().optional().nullable(),
   skills: z.array(z.string()).optional(),
   image: z.string().optional().nullable(),
+  resume: z.string().optional().nullable(),
 });
 
 export const changePasswordSchema = z.object({

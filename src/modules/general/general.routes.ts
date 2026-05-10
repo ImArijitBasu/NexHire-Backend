@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { generalController } from './general.controller';
 import { authenticate } from '../../middleware/auth';
+import { upload } from '../../lib/upload';
 
 const router = Router();
 
@@ -12,5 +13,14 @@ router.put('/notifications/read-all', authenticate, generalController.markAllRea
 router.post('/reviews', authenticate, generalController.createReview);
 router.get('/reviews/:companyId', generalController.getReviews);
 router.get('/public-stats', generalController.getPublicStats);
+
+router.post('/upload', authenticate, upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, error: 'No file uploaded' });
+  }
+  res.json({ success: true, url: req.file.path });
+});
+
+router.delete('/upload', authenticate, generalController.deleteImage);
 
 export default router;

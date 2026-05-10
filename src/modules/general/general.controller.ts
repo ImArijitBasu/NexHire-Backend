@@ -35,4 +35,37 @@ export const generalController = {
     try { const stats = await generalService.getPublicStats(); res.json({ success: true, stats }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
+  async deleteImage(req: AuthRequest, res: Response) {
+    try {
+      const { url } = req.body;
+      if (!url) {
+        res.status(400).json({ success: false, error: 'URL is required' });
+        return;
+      }
+      
+      // Extract public_id from Cloudinary URL
+      const parts = url.split('/');
+      // Usually it's after /upload/v1234/
+      const uploadIndex = parts.findIndex((p: string) => p === 'upload');
+      if (uploadIndex === -1) {
+        res.status(400).json({ success: false, error: 'Invalid Cloudinary URL' });
+        return;
+      }
+      
+      const publicIdWithExt = parts.slice(uploadIndex + 2).join('/');
+      const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+      
+      const cloudinary = require('cloudinary').v2;
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+      });
+
+      await cloudinary.uploader.destroy(publicId);
+      res.json({ success: true, message: 'Image deleted' });
+    } catch (e: any) {
+      res.status(500).json({ success: false, error: 'Failed to delete image' });
+    }
+  },
 };

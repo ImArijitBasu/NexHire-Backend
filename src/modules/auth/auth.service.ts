@@ -102,7 +102,7 @@ export const authService = {
       data,
       select: {
         id: true, name: true, email: true, role: true, image: true,
-        phone: true, bio: true, location: true, website: true, skills: true,
+        phone: true, bio: true, location: true, website: true, skills: true, resume: true,
       },
     });
     return user;

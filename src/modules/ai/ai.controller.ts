@@ -9,7 +9,10 @@ export const aiController = {
       if (!resumeText) { res.status(400).json({ success: false, error: 'Resume text is required' }); return; }
       const analysis = await aiService.analyzeResume(req.user!.id, resumeText, targetRole);
       res.json({ success: true, analysis });
-    } catch (error: any) { res.status(500).json({ success: false, error: 'AI analysis failed. Please try again.' }); }
+    } catch (error: any) { 
+      console.error('AI Resume Error:', error);
+      res.status(500).json({ success: false, error: 'AI analysis failed. Please try again.' }); 
+    }
   },
 
   async generateCoverLetter(req: AuthRequest, res: Response) {
@@ -18,14 +21,20 @@ export const aiController = {
       if (!jobTitle || !company) { res.status(400).json({ success: false, error: 'Job title and company are required' }); return; }
       const coverLetter = await aiService.generateCoverLetter(req.user!.id, req.user!.name, req.body);
       res.json({ success: true, coverLetter });
-    } catch (error: any) { res.status(500).json({ success: false, error: 'AI generation failed. Please try again.' }); }
+    } catch (error: any) { 
+      console.error('AI Cover Letter Error:', error);
+      res.status(500).json({ success: false, error: 'AI generation failed. Please try again.' }); 
+    }
   },
 
   async matchJobs(req: AuthRequest, res: Response) {
     try {
       const result = await aiService.matchJobs(req.user!.id, req.body.preferences);
       res.json({ success: true, result });
-    } catch (error: any) { res.status(500).json({ success: false, error: 'AI matching failed. Please try again.' }); }
+    } catch (error: any) { 
+      console.error('AI Job Match Error:', error);
+      res.status(500).json({ success: false, error: 'AI matching failed. Please try again.' }); 
+    }
   },
 
   async interviewChat(req: AuthRequest, res: Response) {
@@ -34,7 +43,10 @@ export const aiController = {
       if (!message) { res.status(400).json({ success: false, error: 'Message is required' }); return; }
       const result = await aiService.interviewChat(req.user!.id, req.body);
       res.json({ success: true, ...result });
-    } catch (error: any) { res.status(500).json({ success: false, error: 'AI chat failed. Please try again.' }); }
+    } catch (error: any) { 
+      console.error('AI Interview Chat Error:', error);
+      res.status(500).json({ success: false, error: 'AI chat failed. Please try again.' }); 
+    }
   },
 
   async getHistory(req: AuthRequest, res: Response) {

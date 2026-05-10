@@ -121,6 +121,7 @@ model Company {
   slug        String   @unique
   logo        String?
   coverImage  String?
+  coverImages String[]
   description String?
   industry    String?
   size        String?

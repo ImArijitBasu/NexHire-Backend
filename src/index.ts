@@ -10,6 +10,8 @@ import { errorHandler, notFound } from './middleware/errorHandler';
 import { generalLimiter } from './middleware/rateLimiter';
 
 // Module routes
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from './lib/auth';
 import authRoutes from './modules/auth/auth.routes';
 import jobsRoutes from './modules/jobs/jobs.routes';
 import applicationsRoutes from './modules/applications/applications.routes';
@@ -50,6 +52,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 // API routes
+app.use('/api/better-auth', toNodeHandler(auth));
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobsRoutes);
 app.use('/api/applications', applicationsRoutes);

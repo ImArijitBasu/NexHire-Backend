@@ -2,6 +2,16 @@ import prisma from '../../lib/prisma';
 import logger from '../../lib/logger';
 import { geminiModel, geminiChatModel } from '../../lib/gemini';
 
+const parseJsonResponse = (text: string) => {
+  try {
+    const cleanText = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+    return JSON.parse(cleanText);
+  } catch (error) {
+    logger.error('Failed to parse AI response:', text);
+    throw error;
+  }
+};
+
 export const aiService = {
   async analyzeResume(userId: string, resumeText: string, targetRole?: string) {
     const prompt = `You are an expert career consultant. Analyze this resume${targetRole ? ` for a ${targetRole} position` : ''}.
@@ -24,7 +34,7 @@ Return JSON:
 }`;
 
     const result = await geminiModel.generateContent(prompt);
-    const analysis = JSON.parse(result.response.text());
+    const analysis = parseJsonResponse(result.response.text());
 
     await prisma.aiTripPlan.create({
       data: { userId, title: `Resume Analysis${targetRole ? ` - ${targetRole}` : ''}`, input: { resumeText: resumeText.substring(0, 500), targetRole } as any, result: analysis as any, type: 'resume_analysis' },
@@ -54,7 +64,7 @@ Return JSON:
 }`;
 
     const result = await geminiModel.generateContent(prompt);
-    const coverLetter = JSON.parse(result.response.text());
+    const coverLetter = parseJsonResponse(result.response.text());
 
     await prisma.aiTripPlan.create({
       data: { userId, title: `Cover Letter - ${data.jobTitle} at ${data.company}`, input: data as any, result: coverLetter as any, type: 'cover_letter' },
@@ -85,7 +95,7 @@ Return top 10 matches as JSON:
 }`;
 
     const result = await geminiModel.generateContent(prompt);
-    const matchResult = JSON.parse(result.response.text());
+    const matchResult = parseJsonResponse(result.response.text());
 
     const enriched = matchResult.matches?.map((m: any) => {
       const job = jobs.find((j: any) => j.id === m.jobId);
@@ -107,10 +117,10 @@ Return top 10 matches as JSON:
 
     const chatHistory = history.map((h: any) => ({ role: h.role as 'user' | 'model', parts: [{ text: h.content }] }));
     const chat = geminiChatModel.startChat({
-      history: [
-        { role: 'user', parts: [{ text: systemPrompt }] },
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      history: chatHistory.length > 0 ? chatHistory : [
+        { role: 'user', parts: [{ text: "Hi, I'm ready to practice." }] },
         { role: 'model', parts: [{ text: "I'm NexHire's AI Interview Coach! Ready to help you ace your next interview. What would you like to practice?" }] },
-        ...chatHistory,
       ],
     });
 
