@@ -27,4 +27,8 @@ export const blogsController = {
     try { const result = await blogsService.getAllAdmin(req.query as Record<string, string>); res.json({ success: true, ...result }); }
     catch (e: any) { res.status(500).json({ success: false, error: 'Failed' }); }
   },
+  async getMy(req: AuthRequest, res: Response) {
+    try { const result = await blogsService.getMy(req.user!.id, req.query as Record<string, string>); res.json({ success: true, ...result }); }
+    catch (e: any) { res.status(500).json({ success: false, error: 'Failed to fetch your blogs' }); }
+  },
 };

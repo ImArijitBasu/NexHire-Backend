@@ -117,7 +117,7 @@ Return top 10 matches as JSON:
 
     const chatHistory = history.map((h: any) => ({ role: h.role as 'user' | 'model', parts: [{ text: h.content }] }));
     const chat = geminiChatModel.startChat({
-      systemInstruction: { parts: [{ text: systemPrompt }] },
+      systemInstruction: systemPrompt,
       history: chatHistory.length > 0 ? chatHistory : [
         { role: 'user', parts: [{ text: "Hi, I'm ready to practice." }] },
         { role: 'model', parts: [{ text: "I'm NexHire's AI Interview Coach! Ready to help you ace your next interview. What would you like to practice?" }] },

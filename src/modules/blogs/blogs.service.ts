@@ -54,4 +54,17 @@ export const blogsService = {
     ]);
     return { blogs, pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) } };
   },
+
+  async getMy(userId: string, query: { search?: string; page?: string; limit?: string }) {
+    const where: any = { authorId: userId };
+    if (query.search) where.title = { contains: query.search, mode: 'insensitive' };
+    const pageNum = parseInt(query.page || '1');
+    const limitNum = parseInt(query.limit || '10');
+
+    const [blogs, total] = await Promise.all([
+      prisma.blog.findMany({ where, skip: (pageNum - 1) * limitNum, take: limitNum, orderBy: { createdAt: 'desc' } }),
+      prisma.blog.count({ where }),
+    ]);
+    return { blogs, pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) } };
+  },
 };
