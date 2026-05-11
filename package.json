@@ -2,11 +2,11 @@
   "name": "nexhire-server",
   "version": "1.0.0",
   "description": "NexHire - AI-Powered Job Board API",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "npx tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "seed": "tsx prisma/seed.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
