@@ -27,6 +27,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust reverse proxy for rate limiting (e.g. Render, Vercel, Nginx)
+app.set('trust proxy', 1);
+
 // Global middleware
 app.use(helmet());
 app.use(compression());

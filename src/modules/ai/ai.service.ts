@@ -151,7 +151,13 @@ Return top 10 matches as JSON:
   },
 
   async getChatSessions(userId: string) {
-    return prisma.chatMessage.findMany({ where: { userId }, distinct: ['sessionId'], orderBy: { createdAt: 'desc' }, select: { sessionId: true, createdAt: true } });
+    const sessions = await prisma.chatMessage.groupBy({
+      by: ['sessionId'],
+      where: { userId },
+      _max: { createdAt: true },
+      orderBy: { _max: { createdAt: 'desc' } }
+    });
+    return sessions.map((s: any) => ({ sessionId: s.sessionId, createdAt: s._max.createdAt }));
   },
 
   async getChatMessages(userId: string, sessionId: string) {
