@@ -6,13 +6,17 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  secret: process.env.BETTER_AUTH_SECRET,
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-  trustedOrigins: [process.env.CLIENT_URL || 'http://localhost:3000'],
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/better-auth',
+  trustedOrigins: [
+    process.env.CLIENT_URL || 'http://localhost:3000',
+    'http://localhost:3000'
+  ],
+  baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:5000/api/better-auth',
   basePath: '/api/better-auth',
 });
